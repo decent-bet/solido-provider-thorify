@@ -1,4 +1,4 @@
-import { IMethodOrEventCall, EventFilter, ThorifyLog, SolidoProviderType } from '@decent-bet/solido';
+import { IMethodOrEventCall, EventFilter, ThorifyLog, SolidoProviderType, ProviderInstance } from '@decent-bet/solido';
 import { ThorifySettings } from './ThorifySettings';
 import { SolidoProvider } from '@decent-bet/solido';
 import { SolidoContract, SolidoSigner } from '@decent-bet/solido';
@@ -12,6 +12,8 @@ export declare class ThorifyPlugin extends SolidoProvider implements SolidoContr
     readonly from: string;
     getProviderType(): SolidoProviderType;
     onReady<T>(settings: T & ThorifySettings): void;
+    connect(): void;
+    setInstanceOptions(settings: ProviderInstance): void;
     prepareSigning(methodCall: any, options: IMethodOrEventCall, args: any[]): Promise<SolidoSigner>;
     getAbiMethod(name: string): object;
     callMethod(name: string, args: any[]): any;
