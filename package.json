@@ -1,6 +1,6 @@
 {
   "name": "@decent-bet/solido-provider-thorify",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "Solido Thorify provider",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -30,15 +30,15 @@
     "nodemon": "^1.18.10",
     "ts-node": "^8.0.3",
     "typescript": "^3.3.4000",
-    "@decent-bet/solido": "1.0.0-beta.5"
+    "@decent-bet/solido": "1.0.0"
   },
   "dependencies": {
-    "rxjs": "^6.5.1",
-    "thor-devkit": "^0.10.1",
-    "thorify": "^1.1.0",
+    "rxjs": "^6.5.2",
+    "thor-devkit": "^0.11.0",
+    "thorify": "^1.2.0",
     "web3": "1.0.0-beta.37"
   },
   "peerDependencies": {
-    "@decent-bet/solido": "1.0.0-beta.5"
+    "@decent-bet/solido": "1.0.0"
   }
 }
