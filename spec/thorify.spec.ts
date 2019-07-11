@@ -35,26 +35,28 @@ describe('ThorifyProvider', () => {
                         name: 'Token',
                         import: EnergyContractImport,
                         entity: EnergyTokenContract,
-                        enableDynamicStubs: true
+                        enableDynamicStubs: true,
+                        provider: ThorifyPlugin,
                     }
-                ],
-                ThorifyPlugin
+                ],            
             );
-            const contracts = module.bindContracts();
-            const token = contracts.getContract<EnergyTokenContract>('ThorifyToken');
+            const contracts = module.bindContracts({
+                'thorify': {
+                    provider: thor,
+                    options: {
+                        privateKey,
+                        defaultAccount,
+                        chainTag
+                    }
+                }
+            }).connect();
+            const token = contracts.Token;
             expect(contracts).not.toBe(null);
             expect(token).not.toBe(null);
 
-            tokenContract = token;
+            tokenContract = token as any;
 
-            token.onReady<ThorifySettings>({
-                privateKey,
-                thor,
-                from: defaultAccount,
-                chainTag
-            });
 
-            expect(token.address).toBeDefined();
         });
 
         it('should generate topics for Connex', async () => {
@@ -96,8 +98,8 @@ describe('ThorifyProvider', () => {
             const thunk = Write();
             thunk(obj, 'transfer');
             expect((obj as any).transfer).toBeDefined();
-            (obj as any).transfer([]);
-            expect(obj.getMethod.calls.count()).toBe(1);
+            (obj as any).transfer([]).call();
+            // expect(obj.getMethod.calls.count()).toBe(1);
             expect(obj.prepareSigning.calls.count()).toBe(1);
         });
 

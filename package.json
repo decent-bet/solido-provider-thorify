@@ -1,6 +1,6 @@
 {
   "name": "@decent-bet/solido-provider-thorify",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "Solido Thorify provider",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -21,16 +21,16 @@
   },
   "homepage": "https://github.com/decent-bet/solido-provider-thorify#readme",
   "devDependencies": {
-    "@types/jasmine": "^3.3.12",
-    "@types/node": "^11.12.0",
-    "@typescript-eslint/eslint-plugin": "^1.5.0",
-    "eslint": "^5.15.3",
+    "@types/jasmine": "^3.3.13",
+    "@types/node": "^12.6.2",
+    "@typescript-eslint/eslint-plugin": "^1.11.0",
+    "eslint": "^6.0.1",
     "jasmine": "^3.4.0",
     "jasmine-ts": "^0.3.0",
-    "nodemon": "^1.18.10",
-    "ts-node": "^8.0.3",
-    "typescript": "^3.3.4000",
-    "@decent-bet/solido": "1.0.0"
+    "nodemon": "^1.19.1",
+    "ts-node": "^8.3.0",
+    "typescript": "^3.5.3",
+    "@decent-bet/solido": "^1.1.1"
   },
   "dependencies": {
     "rxjs": "^6.5.2",
@@ -39,6 +39,6 @@
     "web3": "1.0.0-beta.37"
   },
   "peerDependencies": {
-    "@decent-bet/solido": "1.0.0"
+    "@decent-bet/solido": "^1.1.1"
   }
 }
