@@ -82,7 +82,7 @@ export class ThorifyPlugin extends SolidoProvider implements SolidoContract {
     // get method instance with args
     const fn = methodCall(...args);
 
-    return new ThorifySigner(this.thor, fn, this.defaultAccount, {
+    return new ThorifySigner(this.thor, fn, options.from || this.defaultAccount, {
       gas,
       gasPriceCoef
     });
