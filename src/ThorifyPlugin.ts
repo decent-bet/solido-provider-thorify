@@ -12,6 +12,23 @@ import { ThorifySettings } from './ThorifySettings';
 import { SolidoProvider } from '@decent-bet/solido';
 import { SolidoContract, SolidoSigner } from '@decent-bet/solido';
 import { SolidoTopic } from '@decent-bet/solido';
+import { Observable, Subject, from } from 'rxjs';
+import { pluck } from 'rxjs/operators';
+
+export interface MapAction {
+  [key: string]: {
+    getter: string,
+    onFilter: string,
+    mutation: (e: object, contract: any) => Observable<object>
+  };
+}
+
+export interface ReactiveContractStore {
+  mapActions?: MapAction,
+  state: object;
+}
+
+
 /**
  * ThorifyPlugin provider for Solido
  */
@@ -22,6 +39,11 @@ export class ThorifyPlugin extends SolidoProvider implements SolidoContract {
   public defaultAccount: string;
   public address: string;
   private privateKey: string;
+  private store: ReactiveContractStore = {
+    mapActions: {},
+    state: {}
+  };
+  private _subscriber: Subject<object>;
 
   get from() {
     return this.defaultAccount;
@@ -32,28 +54,56 @@ export class ThorifyPlugin extends SolidoProvider implements SolidoContract {
   }
 
   onReady<T>(settings: T & ThorifySettings) {
-    const { privateKey, thor, chainTag, from } = settings;
+    const { store, privateKey, thor, chainTag, from } = settings;
     this.privateKey = privateKey;
     this.thor = thor;
     this.chainTag = chainTag;
     this.defaultAccount = from;
+    this.store = store;
     this.connect();
   }
 
   public connect() {
     if (this.thor && this.chainTag && this.defaultAccount) {
-    this.instance = new this.thor.eth.Contract(
+      this.instance = new this.thor.eth.Contract(
         this.contractImport.raw.abi as any,
         this.contractImport.address[this.chainTag]
-        );
-        this.address = this.contractImport.address[this.chainTag];
-        if (this.privateKey) {
+      );
+      this.address = this.contractImport.address[this.chainTag];
+      if (this.privateKey) {
         this.thor.eth.accounts.wallet.add(this.privateKey);
-        }
+      }
+      if (this.store) {
+        this._subscriber = new Subject();
+        this._subscriber.subscribe((state) => {
+          this.store.state = state;
+        });
+        const allEvents$ = from(this.instance.getPastEvents());
+        allEvents$.subscribe(async (i: any) => {
+          console.log(i)
+          const actions = this.store.mapActions;
+          // find by event
+          const found = Object.keys(actions).find(key => actions[key].onFilter === i.event);
+          const x = actions[found];
+          const mutateRes = await x.mutation(
+            { ...i.returnValues },
+            this.instance,
+          )
+          this._subscriber.next({
+            ...this.store.state,
+            [x.getter]: mutateRes,
+          })
+        })
+      }
     } else {
       throw new Error('Missing onReady settings');
     }
   }
+
+  subscribe(key: string, fn: any) {
+    return this._subscriber.pipe(pluck(key)).subscribe(fn);
+  }
+
 
   public setInstanceOptions(settings: ProviderInstance) {
     this.thor = settings.provider;
@@ -64,8 +114,11 @@ export class ThorifyPlugin extends SolidoProvider implements SolidoContract {
       this.defaultAccount = settings.options.defaultAccount;
     }
     if (settings.options.privateKey) {
-        this.privateKey = settings.options.privateKey;
-      }    
+      this.privateKey = settings.options.privateKey;
+    }
+    if (settings.options.store) {
+      this.store = settings.options.store;
+    }
   }
 
   async prepareSigning(
