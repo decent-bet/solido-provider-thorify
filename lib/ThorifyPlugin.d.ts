@@ -1,7 +1,7 @@
-import { IMethodOrEventCall, EventFilter, ThorifyLog, SolidoProviderType, ProviderInstance } from '@decent-bet/solido';
-import { ThorifySettings } from './ThorifySettings';
-import { SolidoProvider } from '@decent-bet/solido';
+import { EventFilter, IMethodOrEventCall, ProviderInstance, SolidoProviderType, ThorifyLog } from '@decent-bet/solido';
 import { SolidoContract, SolidoSigner } from '@decent-bet/solido';
+import { SolidoProvider } from '@decent-bet/solido';
+import { ThorifySettings } from './ThorifySettings';
 export declare class ThorifyPlugin extends SolidoProvider implements SolidoContract {
     private thor;
     chainTag: string;
@@ -9,7 +9,8 @@ export declare class ThorifyPlugin extends SolidoProvider implements SolidoContr
     defaultAccount: string;
     address: string;
     private privateKey;
-    readonly from: string;
+    private wallet;
+    get from(): string;
     getProviderType(): SolidoProviderType;
     onReady<T>(settings: T & ThorifySettings): void;
     connect(): void;

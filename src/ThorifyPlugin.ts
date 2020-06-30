@@ -1,17 +1,18 @@
-// eslint-disable-next-line spaced-comment
 import Web3 from 'web3';
 import {
-  IMethodOrEventCall,
   EventFilter,
-  ThorifyLog,
+  IMethodOrEventCall,
+  ProviderInstance,
   SolidoProviderType,
-  ProviderInstance
-} from '@decent-bet/solido';
-import { ThorifySigner } from './ThorifySigner';
-import { ThorifySettings } from './ThorifySettings';
-import { SolidoProvider } from '@decent-bet/solido';
+  ThorifyLog
+  } from '@decent-bet/solido';
 import { SolidoContract, SolidoSigner } from '@decent-bet/solido';
+import { SolidoProvider } from '@decent-bet/solido';
 import { SolidoTopic } from '@decent-bet/solido';
+import { ThorifySettings } from './ThorifySettings';
+import { ThorifySigner } from './ThorifySigner';
+import { Wallet as XdvWallet } from 'xdvplatform-wallet';
+// eslint-disable-next-line spaced-comment
 /**
  * ThorifyPlugin provider for Solido
  */
@@ -22,7 +23,7 @@ export class ThorifyPlugin extends SolidoProvider implements SolidoContract {
   public defaultAccount: string;
   public address: string;
   private privateKey: string;
-
+  private wallet: XdvWallet;
   get from() {
     return this.defaultAccount;
   }
@@ -32,9 +33,10 @@ export class ThorifyPlugin extends SolidoProvider implements SolidoContract {
   }
 
   onReady<T>(settings: T & ThorifySettings) {
-    const { privateKey, thor, chainTag, from } = settings;
+    const { privateKey, wallet, thor, chainTag, from } = settings;
     this.privateKey = privateKey;
     this.thor = thor;
+    this.wallet = wallet;
     this.chainTag = chainTag;
     this.defaultAccount = from;
     this.connect();
@@ -85,7 +87,8 @@ export class ThorifyPlugin extends SolidoProvider implements SolidoContract {
     return new ThorifySigner(this.thor, fn, this.defaultAccount, {
       gas,
       gasPriceCoef
-    });
+    },
+    this.wallet);
   }
 
   getAbiMethod(name: string): object {
