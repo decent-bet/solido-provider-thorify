@@ -8,6 +8,7 @@ export declare class ThorifySigner implements SolidoSigner {
     gas: number;
     gasPriceCoef: number;
     accepted: any;
+    contractAddress: any;
     constructor(thor: any, fn: any, from: any, options: any, wallet: Wallet);
     canUse(): Promise<unknown>;
     requestSigning(): Promise<any>;

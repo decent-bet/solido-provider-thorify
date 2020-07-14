@@ -1,6 +1,6 @@
 {
   "name": "@decent-bet/solido-provider-thorify",
-  "version": "2.0.3",
+  "version": "3.0.1",
   "description": "Solido Thorify provider",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -34,6 +34,7 @@
   },
   "dependencies": {
     "@types/web3": "^1.2.2",
+    "axios": "^0.19.2",
     "rxjs": "^6.5.5",
     "thor-devkit": "1.2.5",
     "thorify": "1.5.2",

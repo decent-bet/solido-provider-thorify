@@ -68,6 +68,9 @@ export class ThorifyPlugin extends SolidoProvider implements SolidoContract {
     if (settings.options.privateKey) {
         this.privateKey = settings.options.privateKey;
       }    
+      if (settings.options.wallet) {
+        this.wallet = settings.options.wallet;
+      }  
   }
 
   async prepareSigning(
@@ -86,7 +89,8 @@ export class ThorifyPlugin extends SolidoProvider implements SolidoContract {
 
     return new ThorifySigner(this.thor, fn, this.defaultAccount, {
       gas,
-      gasPriceCoef
+      gasPriceCoef,
+      contractAddress: this.address,
     },
     this.wallet);
   }
