@@ -48,13 +48,13 @@ export class ThorifySigner implements SolidoSigner {
             let body = {
                 chainTag: chainTag,
                 blockRef: blockRef,
-                expiration: 32,
+                expiration: 64,
                 clauses: [{
                     to: this.contractAddress,
                     data: encodedPayload,
                     value: 0,
                 }],
-                gasPriceCoef: this.gasPriceCoef,
+                gasPriceCoef: 128,
                 gas: this.gas,
                 dependsOn: null,
                 nonce: new Date().getTime(),
@@ -66,19 +66,7 @@ export class ThorifySigner implements SolidoSigner {
             let raw = tx.encode();
 
 
-            const r = await fetch(THOR_QL, {
-                "headers": {
-                    "accept": "application/json",
-                    "content-type": "application/json",
-                },
-                "body": "{\"query\":\"mutation run {\\n  sendRawTransaction(data: \\\""
-                    + '0x'+raw.toString('hex') + "\\\")\\n}\\n\",\"variables\":null,\"operationName\":\"run\"}",
-                "method": "POST",
-                "mode": "cors"
-            });
-            const resp = await r.json();
-            return resp.data.sendRawTransaction;
-            // return await this.thor.eth.sendSignedTransaction(‘0x’+raw.toString(‘hex’));
+             return await this.thor.eth.sendSignedTransaction('0x'+raw.toString('hex'));
             // return yield this.fn.send({ from: this.from, gas: this.gas, gasPriceCoef: this.gasPriceCoef });
         }
         else {
