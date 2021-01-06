@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "@types/web3": "^1.2.2",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "rxjs": "^6.5.5",
     "thor-devkit": "1.2.5",
     "thorify": "1.5.2",
